@@ -167,7 +167,19 @@
           const element = values[key];
           if (fields.includes(key) && element !== undefined && element !== null) {
             // 时间
-            newValues[key] = itemIsDateType(key) ? moment(element) : element;
+            if (itemIsDateType(key)) {
+              if (Array.isArray(element)) {
+                const arr: any[] = [];
+                for (const ele of element) {
+                  arr.push(moment(ele));
+                }
+                newValues[key] = arr;
+              } else {
+                newValues[key] = moment(element);
+              }
+            } else {
+              newValues[key] = element;
+            }
           }
         });
         unref(getProps).form.setFieldsValue(newValues);
